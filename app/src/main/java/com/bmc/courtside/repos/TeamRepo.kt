@@ -3,9 +3,8 @@ package com.bmc.courtside.repos
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.widget.Toast
+import android.database.sqlite.SQLiteDatabase
 import com.bmc.courtside.helpers.DbHelper
-import com.bmc.courtside.models.Player
 import com.bmc.courtside.models.Team
 import com.bmc.courtside.models.TeamPlayer
 
@@ -46,7 +45,10 @@ class TeamRepo(context : Context) {
         return team
     }
 
-    fun getTeamPlayers(id:Number): List<TeamPlayer>? {
+    fun getTeamPlayers(id:Number): ArrayList<TeamPlayer>? {
+
+        var playerrepo: PlayerRepo = PlayerRepo(c)
+        var players = playerrepo.getPlayers()
         val teamplayers: ArrayList<TeamPlayer> = ArrayList<TeamPlayer>()
         val db = DbHelper(c).readableDatabase
         val query = "SELECT * FROM TeamPlayers where teamid = '$id'"
@@ -54,6 +56,8 @@ class TeamRepo(context : Context) {
         while (c.moveToNext()) {
             var teamplayer: TeamPlayer = TeamPlayer()
             teamplayer.id = c.getInt(0)
+            teamplayer.firstname = players.filter { player -> player.id == c.getInt(1) }.first().firstname
+            teamplayer.lastname = players.filter { player -> player.id == c.getInt(1) }.first().lastname
             teamplayer.playerid = c.getInt(1)
             teamplayer.teamid = id
             teamplayer.jersey = c.getString(3)
@@ -85,10 +89,19 @@ class TeamRepo(context : Context) {
         var t = res
     }
 
-    fun deleteEntry(ID: String): Int {
-        val where = "id=?"
+
+   fun deleteAllTeamPlayers() {
+       val db = DbHelper(c).readableDatabase
+       db.execSQL("DELETE FROM TeamPlayers")
+       db.close()
+   }
+
+    fun deleteEntry(Table: String, ID: Number): Int {
         val db = DbHelper(c).readableDatabase
-        return db.delete("Teams", where, arrayOf(ID))
+        var sql = "DELETE FROM " + Table + " WHERE id = " + ID
+        db.execSQL(sql)
+        db.close()
+        return 1
     }
 
 }

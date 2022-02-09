@@ -6,8 +6,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bmc.courtside.R
 import com.bmc.courtside.models.Player
+import com.bmc.courtside.models.TeamPlayer
 
-class CustomAdapter(private val mList: List<Player>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class CustomAdapter(private val mList: ArrayList<TeamPlayer>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

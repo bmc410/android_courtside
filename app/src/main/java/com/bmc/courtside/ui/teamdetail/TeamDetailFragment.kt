@@ -44,7 +44,7 @@ class TeamDetailFragment : Fragment() {
     private lateinit var clubs: ArrayList<Club>
     private lateinit var players: ArrayList<Player>
     private lateinit var context: MainActivity
-    private lateinit var playersArray: ArrayList<Player>
+    private lateinit var teamplayers: ArrayList<TeamPlayer>
 
     var years: MutableList<String> = ArrayList()
     private val clubsArray: MutableList<String> = ArrayList()
@@ -97,8 +97,12 @@ class TeamDetailFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 //3
                 val position = viewHolder.adapterPosition
-                playersArray.removeAt(position)
+                var id = teamplayers[position].id
+                teamrepo.deleteEntry("TeamPlayers", id!!)
+                //teamrepo.deleteAllTeamPlayers()
+                teamplayers.removeAt(position)
                 recyclerview.adapter!!.notifyItemRemoved(position)
+                recyclerview.adapter!!.notifyDataSetChanged()
             }
         }
 
@@ -118,14 +122,16 @@ class TeamDetailFragment : Fragment() {
             _id = arguments?.get("id") as Number
         }
         if(_id != -1) {
-            playersArray = ArrayList<Player>()
-            var teamplayers = teamrepo.getTeamPlayers(_id) as List<TeamPlayer>
-            for (teamplayer in teamplayers) {
-                var player = players.filter { player -> player.id == teamplayer.playerid }.firstOrNull()
-                if (player != null) {
-                    playersArray.add(player)
-                }
-            }
+            teamplayers = ArrayList<TeamPlayer>()
+            teamplayers = teamrepo.getTeamPlayers(_id) as ArrayList<TeamPlayer>
+//            for (teamplayer in teamplayers) {
+//                var player = players.filter { player -> player.id == teamplayer.playerid }.firstOrNull()
+//                if (player != null) {
+//                    var tp: TeamPlayer = TeamPlayer()
+//                    tp.
+//                    teamplayers.add(player)
+//                }
+//            }
 //            playersAdapter = TeamDetailPlayersAdapter(context, playersArray)
 //            lv.adapter = playersAdapter
 
@@ -136,7 +142,7 @@ class TeamDetailFragment : Fragment() {
             val data = ArrayList<Player>()
 
             // This will pass the ArrayList to our Adapter
-            val adapter = CustomAdapter(playersArray)
+            val adapter = CustomAdapter(teamplayers)
 
             // Setting the Adapter with the recyclerview
             var ll: LinearLayoutManager = LinearLayoutManager(activity)
@@ -146,19 +152,6 @@ class TeamDetailFragment : Fragment() {
             setRecyclerViewItemTouchListener()
 
             recyclerview.adapter = adapter
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         }
 
@@ -248,7 +241,7 @@ class TeamDetailFragment : Fragment() {
             R.id.action_delete -> {
                 var result = "Test"
                 val t = TeamRepo(context as MainActivity)
-                val team = t.deleteEntry(_id.toString())
+                val team = t.deleteEntry("Teams", _id)
                 //setFragmentResult("requestKey", bundleOf("bundleKey" to result))
                 //parentFragmentManager.popBackStack()
                 n.navigateUp()
