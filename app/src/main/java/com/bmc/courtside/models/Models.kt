@@ -27,6 +27,7 @@ class TeamPlayer {
     var firstname: String = ""
     var lastname: String = ""
     var email: String = ""
+     var isSelected: Boolean = false
 }
  class Game{
      var gameid: Number? = null
@@ -40,6 +41,7 @@ class TeamPlayer {
 }
 
  class Match {
+     var id: Number? = null
      var home: String? = ""
      var hometeamid: Number? = null
      var opponent: String? = ""

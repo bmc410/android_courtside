@@ -3,7 +3,9 @@
 package com.bmc.courtside.ui.teamdetail
 
 import CustomAdapter
+import android.content.Context
 import android.graphics.Color
+import android.os.AsyncTask
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -16,7 +18,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,12 +31,9 @@ import com.bmc.courtside.repos.ClubRepo
 import com.bmc.courtside.repos.PlayerRepo
 import com.bmc.courtside.repos.TeamRepo
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TeamDetailFragment : Fragment() {
-
-
 
     //private lateinit var playersAdapter: TeamDetailPlayersAdapter
     private lateinit var teamrepo: TeamRepo
@@ -55,12 +53,120 @@ class TeamDetailFragment : Fragment() {
     var y: String? = ""
     var cl: Number? = -1
 
-    fun refreshData() {
-        context = getContext() as MainActivity
-        playerrepo = PlayerRepo(context)
-        teamrepo = TeamRepo((context))
-        players = playerrepo.getPlayers()
-        //playersAdapter = TeamDetailPlayersAdapter(context, players)
+
+
+    inner class getTeamData(c: Context) : AsyncTask<Void, Void, String>() {
+        var context = c
+
+        fun getTeamData(context: Context) {
+
+        }
+
+        override fun doInBackground(vararg params: Void?): String? {
+            playerrepo = PlayerRepo(context)
+            teamrepo = TeamRepo((context))
+            players = playerrepo.getPlayers()
+            return ""
+        }
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            // ...
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            setupUI()
+        }
+    }
+
+    fun setupUI() {
+
+        context = requireContext() as MainActivity
+        //var lv = context.findViewById<ListView>(R.id.teams_players_list_view)
+
+        if(arguments != null) {
+            _id = arguments?.get("id") as Number
+        }
+        if(_id != -1) {
+            teamplayers = ArrayList<TeamPlayer>()
+            teamplayers = teamrepo.getTeamPlayers(_id) as ArrayList<TeamPlayer>
+
+
+
+            // getting the recyclerview by its id
+            val recyclerview = context.findViewById<RecyclerView>(R.id.matches_listview)
+
+            val data = ArrayList<Player>()
+
+            // This will pass the ArrayList to our Adapter
+            val adapter = CustomAdapter(teamplayers)
+
+            // Setting the Adapter with the recyclerview
+            var ll: LinearLayoutManager = LinearLayoutManager(activity)
+            recyclerview.layoutManager = ll;
+
+
+            setRecyclerViewItemTouchListener()
+
+            recyclerview.adapter = adapter
+
+        }
+
+        var addBtn: Button = view?.findViewById(R.id.btn_add_players_to_team) as Button
+        addBtn.setOnClickListener {
+            val n = Navigation.findNavController(context as MainActivity, R.id.nav_host_fragment_content_main)
+            val bundle: Bundle = Bundle()
+            bundle.putInt("id", _id as Int)
+            n.navigate(R.id.action_nav_team_detail_to_nav_team_players, bundle)
+
+        }
+
+        if(arguments != null) {
+            _id = arguments?.get("id") as Number
+        }
+        if(_id != -1) {
+            var team = teamrepo.getTeam(_id)
+            players = playerrepo.getPlayers()
+
+
+            teamname = team?.teamname.toString()
+            cl = team?.clubid
+            y = team?.year
+            (context as MainActivity).supportActionBar?.title = teamname
+            //team name
+            var textView: TextView = (context as MainActivity).findViewById(R.id.txt_opponent) as TextView
+            textView.text = teamname
+
+
+
+        }
+
+
+        val c = ClubRepo(context as MainActivity)
+        clubs = c.getClubs()
+
+        for (c in clubs) {
+            clubsArray.add(c.clubname)
+        }
+
+        //Year spinner
+        var tv = requireView().findViewById(R.id.txt_match_date) as AutoCompleteTextView
+        val adYears = ArrayAdapter(requireContext(), R.layout.list_item, years)
+        tv.setAdapter(adYears)
+        if (y != null && y != "") {
+            tv.setText(y, false)
+        }
+
+
+        //Club spinner
+        var cv = requireView().findViewById(R.id.player_team_spinner) as AutoCompleteTextView
+        val adClubs = ArrayAdapter(requireContext(), R.layout.list_item, clubsArray)
+        cv.setAdapter(adClubs)
+        if (cl != null && cl != -1) {
+            cv.setText(clubs.filter { it.clubid == cl }[0].clubname, false)
+
+        }
     }
 
     override fun onCreateView(
@@ -86,7 +192,7 @@ class TeamDetailFragment : Fragment() {
     }
 
     private fun setRecyclerViewItemTouchListener() {
-        val recyclerview = context.findViewById<RecyclerView>(R.id.recyclerview)
+        val recyclerview = context.findViewById<RecyclerView>(R.id.matches_listview)
         //1
         val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
@@ -115,100 +221,94 @@ class TeamDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        refreshData()
-        //var lv = context.findViewById<ListView>(R.id.teams_players_list_view)
 
-        if(arguments != null) {
-            _id = arguments?.get("id") as Number
-        }
-        if(_id != -1) {
-            teamplayers = ArrayList<TeamPlayer>()
-            teamplayers = teamrepo.getTeamPlayers(_id) as ArrayList<TeamPlayer>
-//            for (teamplayer in teamplayers) {
-//                var player = players.filter { player -> player.id == teamplayer.playerid }.firstOrNull()
-//                if (player != null) {
-//                    var tp: TeamPlayer = TeamPlayer()
-//                    tp.
-//                    teamplayers.add(player)
-//                }
-//            }
-//            playersAdapter = TeamDetailPlayersAdapter(context, playersArray)
-//            lv.adapter = playersAdapter
+        getTeamData(requireContext()).execute()
 
-
-            // getting the recyclerview by its id
-            val recyclerview = context.findViewById<RecyclerView>(R.id.recyclerview)
-
-            val data = ArrayList<Player>()
-
-            // This will pass the ArrayList to our Adapter
-            val adapter = CustomAdapter(teamplayers)
-
-            // Setting the Adapter with the recyclerview
-            var ll: LinearLayoutManager = LinearLayoutManager(activity)
-            recyclerview.layoutManager = ll;
-
-
-            setRecyclerViewItemTouchListener()
-
-            recyclerview.adapter = adapter
-
-        }
-
-        var addBtn: Button = view.findViewById(R.id.btn_add_players_to_team) as Button
-        addBtn.setOnClickListener {
-            val n = Navigation.findNavController(context as MainActivity, R.id.nav_host_fragment_content_main)
-            val bundle: Bundle = Bundle()
-            bundle.putInt("id", _id as Int)
-            n.navigate(R.id.action_nav_team_detail_to_nav_team_players, bundle)
-
-        }
-
-        if(arguments != null) {
-            _id = arguments?.get("id") as Number
-        }
-        if(_id != -1) {
-            var team = teamrepo.getTeam(_id)
-            players = playerrepo.getPlayers()
-
-
-            teamname = team?.teamname.toString()
-            cl = team?.clubid
-            y = team?.year
-            (context as MainActivity).supportActionBar?.title = teamname
-            //team name
-            var textView: TextView = (context as MainActivity).findViewById(R.id.team_detail_team_name) as TextView
-            textView.text = teamname
+//        refreshData()
+//        //var lv = context.findViewById<ListView>(R.id.teams_players_list_view)
+//
+//        if(arguments != null) {
+//            _id = arguments?.get("id") as Number
+//        }
+//        if(_id != -1) {
+//            teamplayers = ArrayList<TeamPlayer>()
+//            teamplayers = teamrepo.getTeamPlayers(_id) as ArrayList<TeamPlayer>
+//
+//
+//
+//            // getting the recyclerview by its id
+//            val recyclerview = context.findViewById<RecyclerView>(R.id.recyclerview)
+//
+//            val data = ArrayList<Player>()
+//
+//            // This will pass the ArrayList to our Adapter
+//            val adapter = CustomAdapter(teamplayers)
+//
+//            // Setting the Adapter with the recyclerview
+//            var ll: LinearLayoutManager = LinearLayoutManager(activity)
+//            recyclerview.layoutManager = ll;
+//
+//
+//            setRecyclerViewItemTouchListener()
+//
+//            recyclerview.adapter = adapter
+//
+//        }
+//
+//        var addBtn: Button = view.findViewById(R.id.btn_add_players_to_team) as Button
+//        addBtn.setOnClickListener {
+//            val n = Navigation.findNavController(context as MainActivity, R.id.nav_host_fragment_content_main)
+//            val bundle: Bundle = Bundle()
+//            bundle.putInt("id", _id as Int)
+//            n.navigate(R.id.action_nav_team_detail_to_nav_team_players, bundle)
+//
+//        }
+//
+//        if(arguments != null) {
+//            _id = arguments?.get("id") as Number
+//        }
+//        if(_id != -1) {
+//            var team = teamrepo.getTeam(_id)
+//            players = playerrepo.getPlayers()
+//
+//
+//            teamname = team?.teamname.toString()
+//            cl = team?.clubid
+//            y = team?.year
+//            (context as MainActivity).supportActionBar?.title = teamname
+//            //team name
+//            var textView: TextView = (context as MainActivity).findViewById(R.id.team_detail_team_name) as TextView
+//            textView.text = teamname
+//
+//
+//
+//        }
 
 
-
-        }
-
-
-        val c = ClubRepo(context as MainActivity)
-        clubs = c.getClubs()
-
-        for (c in clubs) {
-            clubsArray.add(c.clubname)
-        }
-
-        //Year spinner
-        var tv = view.findViewById(R.id.year_spinner) as AutoCompleteTextView
-        val adYears = ArrayAdapter(requireContext(), R.layout.list_item, years)
-        tv.setAdapter(adYears)
-        if (y != null && y != "") {
-            tv.setText(y, false)
-        }
+//        val c = ClubRepo(context as MainActivity)
+//        clubs = c.getClubs()
+//
+//        for (c in clubs) {
+//            clubsArray.add(c.clubname)
+//        }
+//
+//        //Year spinner
+//        var tv = view.findViewById(R.id.year_spinner) as AutoCompleteTextView
+//        val adYears = ArrayAdapter(requireContext(), R.layout.list_item, years)
+//        tv.setAdapter(adYears)
+//        if (y != null && y != "") {
+//            tv.setText(y, false)
+//        }
 
 
-        //Club spinner
-        var cv = view.findViewById(R.id.player_team_spinner) as AutoCompleteTextView
-        val adClubs = ArrayAdapter(requireContext(), R.layout.list_item, clubsArray)
-        cv.setAdapter(adClubs)
-        if (cl != null && cl != -1) {
-            cv.setText(clubs.filter { it.clubid == cl }[0].clubname, false)
-
-        }
+//        //Club spinner
+//        var cv = view.findViewById(R.id.player_team_spinner) as AutoCompleteTextView
+//        val adClubs = ArrayAdapter(requireContext(), R.layout.list_item, clubsArray)
+//        cv.setAdapter(adClubs)
+//        if (cl != null && cl != -1) {
+//            cv.setText(clubs.filter { it.clubid == cl }[0].clubname, false)
+//
+//        }
 
     }
 
@@ -217,11 +317,11 @@ class TeamDetailFragment : Fragment() {
         val n = Navigation.findNavController(context as MainActivity, R.id.nav_host_fragment_content_main)
         return when (item.itemId) {
             R.id.action_save -> {
-                var textView: TextView = (context as MainActivity).findViewById(R.id.team_detail_team_name) as TextView
+                var textView: TextView = (context as MainActivity).findViewById(R.id.txt_opponent) as TextView
                 val teamName = textView.text.toString()
                 var cv = (context as MainActivity).findViewById(R.id.player_team_spinner) as AutoCompleteTextView
                 val club = cv.text.toString()
-                var tv = (context as MainActivity).findViewById(R.id.year_spinner) as AutoCompleteTextView
+                var tv = (context as MainActivity).findViewById(R.id.txt_match_date) as AutoCompleteTextView
                 val year = tv.text.toString()
                 val t = TeamRepo(context as MainActivity)
                 //val newteam = Team(-1, teamName, 1, year)

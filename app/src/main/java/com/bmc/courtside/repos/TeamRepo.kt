@@ -90,9 +90,9 @@ class TeamRepo(context : Context) {
     }
 
 
-   fun deleteAllTeamPlayers() {
+   fun deleteAllTeamPlayers(ID: Number) {
        val db = DbHelper(c).readableDatabase
-       db.execSQL("DELETE FROM TeamPlayers")
+       db.execSQL("DELETE FROM TeamPlayers where teamid = " + ID)
        db.close()
    }
 

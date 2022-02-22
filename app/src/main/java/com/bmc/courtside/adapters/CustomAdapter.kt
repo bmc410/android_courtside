@@ -31,6 +31,7 @@ class CustomAdapter(private val mList: ArrayList<TeamPlayer>) : RecyclerView.Ada
         // sets the text to the textview from our itemHolder class
         holder.textView.text = player.firstname + " " + player.lastname
 
+
     }
 
     // return the number of the items in the list

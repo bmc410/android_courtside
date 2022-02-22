@@ -72,7 +72,7 @@ class DbHelper(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     companion object {
         const val ASSETS_PATH = "databases"
         const val DATABASE_NAME = "courtside_db"
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 3
         // ...
     }
 

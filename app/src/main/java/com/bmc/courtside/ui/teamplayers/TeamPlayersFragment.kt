@@ -1,5 +1,7 @@
 package com.bmc.courtside.ui.teamplayers
 
+import android.content.Context
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,9 @@ import android.widget.Button
 import android.widget.CheckedTextView
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bmc.courtside.MainActivity
 import com.bmc.courtside.R
 import com.bmc.courtside.adapters.TeamPlayerAdapter
@@ -38,11 +43,52 @@ class TeamPlayersFragment : Fragment() {
     var _id: Number = -1
 
     fun refreshData() {
-        context = getContext() as MainActivity
-        playerrepo = PlayerRepo(context)
-        teamrepo = TeamRepo(context)
-        players = playerrepo.getPlayers()
-        adapter = TeamPlayerAdapter(context, players)
+
+    }
+
+    inner class getTeamPlayerData(c: Context) : AsyncTask<Void, Void, String>() {
+        var context = c
+
+        fun getTeamData(context: Context) {
+
+        }
+
+        override fun doInBackground(vararg params: Void?): String? {
+            context = getContext() as MainActivity
+            playerrepo = PlayerRepo(context)
+            teamrepo = TeamRepo(context)
+            players = playerrepo.getPlayers()
+            return ""
+        }
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            // ...
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            setupUI()
+        }
+    }
+
+    fun setupUI() {
+
+        context = requireContext() as MainActivity
+
+        val recyclerview = context.findViewById<RecyclerView>(R.id.team_players_recycler_view)
+        var teamplayers = teamrepo.getTeamPlayers(_id)
+        for (player in players) {
+            if (teamplayers != null) {
+                player.isSelected = teamplayers.filter { tp -> tp.playerid == player.id}.count() > 0
+            }
+        }
+
+        adapter = TeamPlayerAdapter(players)
+
+        var ll: LinearLayoutManager = LinearLayoutManager(activity)
+        recyclerview.layoutManager = ll;
+        recyclerview.adapter = adapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,77 +99,33 @@ class TeamPlayersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(arguments != null) {
+        context = requireContext() as MainActivity
+
+        if (arguments != null) {
             _id = arguments?.get("id") as Number
         }
 
-        refreshData()
-
-        val lv = context.findViewById<ListView>(R.id.team_players_list_view)
-        lv.adapter = adapter
-        lv.choiceMode = ListView.CHOICE_MODE_MULTIPLE
-
+        getTeamPlayerData(requireContext()).execute()
 
         val btn = context.findViewById<Button>(R.id.btn_AddPlayers)
         btn.setOnClickListener {
 
-            for (i in 0 until adapter.count) {
-                val lv = context.findViewById<ListView>(R.id.team_players_list_view)
+            teamrepo.deleteAllTeamPlayers(_id)
+            var team = teamrepo.getTeam((_id))
 
-                val c = lv.findViewById(R.id.simpleCheckedTextView) as CheckedTextView
-                val checkedValue: Boolean = c.isChecked // check current state of CheckedText
-                if( checkedValue) {
-                    var t = teamrepo.getTeam(_id)
-                    var player = adapter.getItem(i)
-                    var id = player.id
-                    //var tp = TeamPlayer(null, player.id, t?.teamid,"", t?.year?.toInt())
-                    var teamplayer: TeamPlayer = TeamPlayer()
+            for (player in adapter.checkedPlayers) {
+                var teamplayer: TeamPlayer = TeamPlayer()
                     teamplayer.playerid = player.id
-                    if (t != null) {
-                        teamplayer.teamid = t.id
-                    }
+                    teamplayer.teamid = _id
                     teamplayer.jersey = ""
-                    if (t != null) {
-                        teamplayer.year = t.year?.toInt()
-                    }
+                    teamplayer.year = team?.year?.toInt()
                     teamrepo.insertTeamPlayer(teamplayer)
-
-                }
             }
+            val n = Navigation.findNavController(context as MainActivity, R.id.nav_host_fragment_content_main)
+            n.navigateUp()
 
         }
-            //return names
-        }
-
-            //val n = Navigation.findNavController(context as MainActivity, R.id.nav_host_fragment_content_main)
-            //n.navigateUp()
-        //}
-
-
-
-
-        //this.listView.setAdapter(arrayAdapter)
-        //adapter.setCallback((this))
-
-
-
-//        lv.setOnItemClickListener { parent, view, position, id ->
-//
-//            val n = Navigation.findNavController(context, R.id.nav_host_fragment_content_main)
-//
-//            //val fragment: Fragment = TeamDetailFragment()
-//
-//            //val args = Bundle()
-//            val bundle = bundleOf("id" to position)
-//            bundle.putInt("id", players[position].id as Int)
-//
-//
-//            //fragmentManager?.putFragment(bundle, "", fragment)
-//            n.navigate(R.id.action_nav_players_to_playerDetailFragment, bundle)
-//
-//        }
-
-    //}
+    }
 
 
 
