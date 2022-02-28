@@ -117,6 +117,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="none"
                     android:paddingLeft="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
                     android:textSize="@dimen/app_font" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -124,46 +126,249 @@
         </LinearLayout>
 
 <!--        Games-->
-        <LinearLayout
+
+        <!--        Table Layout-->
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle"
+            android:stretchColumns="1,2">
 
-            <Button
-                android:id="@+id/btngame1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="1" />
+            <TableRow>
 
-            <Button
-                android:id="@+id/btngame2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="2" />
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Game"
+                    android:textSize="@dimen/app_font"
+                    android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btngame3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="3" />
+                <TextView
+                    android:id="@+id/txtHeaderHomeTeam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
 
-            <Button
-                android:id="@+id/btngame4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="4" />
+                <TextView
+                    android:id="@+id/txtHeaderOpponentTeam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
 
-            <Button
-                android:id="@+id/btngame5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="5" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewHeaderSpacer2"
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal|center_vertical" />
+            </TableRow>
+
+            <TableRow android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtG1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="1"
+                    android:textAlignment="gravity"
+                    android:textSize="@dimen/app_font"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtG1HomeScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <TextView
+                    android:id="@+id/txtG1OpponentScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <ImageButton
+                    android:id="@+id/btnP1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:src="@drawable/ic_play_arrow_72"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </TableRow>
+
+            <TableRow android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtG2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="2"
+                    android:textAlignment="gravity"
+                    android:textSize="@dimen/app_font"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtG2HomeScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <TextView
+                    android:id="@+id/txtG2OpponentScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <ImageButton
+                    android:id="@+id/btnP2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:src="@drawable/ic_play_arrow_72"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </TableRow>
+
+            <TableRow android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtG3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="3"
+                    android:textAlignment="gravity"
+                    android:textSize="@dimen/app_font"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtG3HomeScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <TextView
+                    android:id="@+id/txtG3OpponentScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <ImageButton
+                    android:id="@+id/btnP3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:src="@drawable/ic_play_arrow_72"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </TableRow>
+
+            <TableRow android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtG4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="4"
+                    android:textAlignment="gravity"
+                    android:textSize="@dimen/app_font"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtG4HomeScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <TextView
+                    android:id="@+id/txtG4OpponentScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <ImageButton
+                    android:id="@+id/btnP4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:src="@drawable/ic_play_arrow_72"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </TableRow>
+
+            <TableRow android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtG5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="5"
+                    android:textAlignment="gravity"
+                    android:textSize="@dimen/app_font"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtG5HomeScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <TextView
+                    android:id="@+id/txtG5OpponentScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textSize="@dimen/app_font" />
+
+                <ImageButton
+                    android:id="@+id/btnP5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:src="@drawable/ic_play_arrow_72"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </TableRow>
+
+        </TableLayout>
+
 
     </LinearLayout>
 

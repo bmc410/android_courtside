@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_rowWeight="1"
-        android:layout_columnWeight="1"
-        android:layout_margin="16dp">
+        android:layout_columnWeight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +38,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:text="#17"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -55,7 +53,6 @@
                 android:gravity="start"
                 android:text="@string/hitting"
                 android:textColor="@color/material_on_surface_emphasis_high_type"
-                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -77,6 +74,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#4CAF50"
                     android:ellipsize="end"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="Kill"
                     android:textColor="#263238" />
@@ -90,6 +88,7 @@
                     android:backgroundTint="#FFEB3B"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="Attempt" />
 
@@ -102,6 +101,7 @@
                     android:backgroundTint="#F44336"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="Error" />
 
@@ -138,6 +138,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#F44336"
                     android:ellipsize="none"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:singleLine="true"
                     android:text=" Error" />
@@ -149,6 +150,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:backgroundTint="#4CAF50"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:paddingLeft="0dp"
                     android:paddingTop="0dp"
@@ -164,6 +166,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:backgroundTint="#4CAF50"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="2" />
 
@@ -174,6 +177,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:backgroundTint="#4CAF50"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="3" />
 
@@ -211,6 +215,7 @@
                     android:backgroundTint="#4CAF50"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="Block" />
 
@@ -223,6 +228,7 @@
                     android:backgroundTint="#FFEB3B"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="@string/touch" />
 
@@ -235,6 +241,7 @@
                     android:backgroundTint="#FFEB3B"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="@string/assist" />
 
@@ -247,6 +254,7 @@
                     android:backgroundTint="#F44336"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="@string/error" />
             </LinearLayout>
@@ -292,6 +300,7 @@
                         android:backgroundTint="#FFEB3B"
                         android:ellipsize="end"
                         android:lines="1"
+                        android:minHeight="10dp"
                         android:padding="0dp"
                         android:text="@string/attempt" />
 
@@ -304,6 +313,7 @@
                         android:backgroundTint="#4CAF50"
                         android:ellipsize="end"
                         android:lines="1"
+                        android:minHeight="10dp"
                         android:padding="0dp"
                         android:text="@string/assist" />
 
@@ -316,6 +326,7 @@
                         android:backgroundTint="#F44336"
                         android:ellipsize="end"
                         android:lines="1"
+                        android:minHeight="10dp"
                         android:padding="0dp"
                         android:text="@string/error" />
                 </LinearLayout>
@@ -353,6 +364,7 @@
                     android:backgroundTint="#4CAF50"
                     android:ellipsize="end"
                     android:lines="1"
+                    android:minHeight="10dp"
                     android:padding="0dp"
                     android:text="Dig" />
 

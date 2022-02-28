@@ -9,10 +9,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.view.View.OnFocusChangeListener
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -153,10 +150,42 @@ class MatchDetailFragment : Fragment() {
         dtv.setText("")
         //dtv.text = SimpleDateFormat("dd.MM.yyyy").format(System.currentTimeMillis())
 
+        var hometv = requireView().findViewById(R.id.txtHeaderHomeTeam) as TextView
+        hometv.text = ""
+
+        var opptv = requireView().findViewById(R.id.txtHeaderOpponentTeam) as TextView
+        hometv.text = ""
+
+        val p1: ImageButton = requireView().findViewById(R.id.btnP1)
+        val p2: ImageButton = requireView().findViewById(R.id.btnP2)
+        val p3: ImageButton = requireView().findViewById(R.id.btnP3)
+        val p4: ImageButton = requireView().findViewById(R.id.btnP4)
+        val p5: ImageButton = requireView().findViewById(R.id.btnP5)
+
+        p1.setOnClickListener {
+            showGame(1)
+        }
+        p2.setOnClickListener {
+            // Do something in response to button click
+        }
+        p3.setOnClickListener {
+            // Do something in response to button click
+        }
+        p4.setOnClickListener {
+            // Do something in response to button click
+        }
+        p5.setOnClickListener {
+            // Do something in response to button click
+        }
+
+
+
         dtv.transformIntoDatePicker(requireContext(), "MM/dd/yyyy", Date())
 
         if(id != -1) {
             var match = matchrepo.getMatch(id)
+            hometv.text = match.home
+            opptv.text = match.opponent
             dtv.setText(match.matchdate)
             txtOpp.setText(match.opponent)
             tv.setText(match.home)
@@ -164,6 +193,19 @@ class MatchDetailFragment : Fragment() {
         }
 
 
+
+    }
+
+    fun showGame(id: Number) {
+        val n = Navigation.findNavController(context, R.id.nav_host_fragment_content_main)
+
+        //val fragment: Fragment = TeamDetailFragment()
+
+        //val args = Bundle()
+        val bundle =  Bundle()
+
+        //fragmentManager?.putFragment(bundle, "", fragment)
+        n.navigate(R.id.action_matchDetailFragment_to_matchFragment, bundle)
 
     }
 
